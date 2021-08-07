@@ -1,0 +1,46 @@
+version: 2.1
+
+aliases:
+  - &defaults
+    docker:
+      - image: circleci/node:lts-fermium-browsers-legacy
+
+  - &cache_key_node_modules
+    key: yarn-packages-{{ checksum "yarn.lock" }}
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          <<: *cache_key_node_modules
+      - run:
+          name: Install package dependencies
+          command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+          <<: *cache_key_node_modules
+
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/my-coin
+      - run:
+          name: Run the Ganache test network
+          command: yarn run ganache-cli > /dev/null &
+      - run:
+          name: Execute the Test Suites
+          command: yarn test
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build

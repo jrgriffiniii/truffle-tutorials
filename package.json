@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "truffle": "^5.4.5"
+  },
+  "devDependencies": {
+    "ganache-cli": "^6.12.2"
+  },
+  "scripts": {
+    "test": "truffle migrate --network test && truffle test --network test ./test/*.sol && truffle test --network test ./test/*.js"
+  }
+}
