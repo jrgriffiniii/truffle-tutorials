@@ -1,18 +1,22 @@
 version: 2.1
 
-aliases:
-  - &defaults
+executors:
+  truffle-demo-executor_executor:
     docker:
       - image: circleci/node:lts-fermium-browsers-legacy
+      - image: trufflesuite/ganache-cli:latest
+    working_directory: ~/truffle-demo
+
+aliases:
+  - &defaults
+    executor: truffle-demo-executor_executor
 
   - &cache_key_node_modules
     key: yarn-packages-{{ checksum "yarn.lock" }}
 
-jobs:
-  build:
-    <<: *defaults
+commands:
+  install_packages:
     steps:
-      - checkout
       - restore_cache:
           <<: *cache_key_node_modules
       - run:
@@ -23,24 +27,67 @@ jobs:
             - ~/.cache/yarn
           <<: *cache_key_node_modules
 
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - install_packages
+      - persist_to_workspace:
+          root: ~/truffle-demo
+          paths:
+            - node_modules
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/truffle-demo
+      - install_packages
+      - run:
+          name: Lint the Solidity source code files using solhint
+          command: yarn lint
+  migrate:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/truffle-demo
+      - install_packages
+      - run:
+          name: Migrate the contracts
+          command: yarn migrate
   test:
     <<: *defaults
     steps:
       - checkout
       - attach_workspace:
-          at: ~/my-coin
-      - run:
-          name: Run the Ganache test network
-          command: yarn run ganache-cli > /dev/null &
+          at: ~/truffle-demo
+      - install_packages
       - run:
           name: Execute the Test Suites
           command: yarn test
+      - persist_to_workspace:
+          root: ~/truffle-demo
+          paths:
+            - build
+      - store_artifacts:
+          path: ~/truffle-demo/coverage
+          destination: coverage
+      - store_test_results:
+          path: ~/truffle-demo/coverage
 
 workflows:
   version: 2
   ci:
     jobs:
       - build
-      - test:
+      - lint:
           requires:
             - build
+      - migrate:
+          requires:
+            - build
+      - test:
+          requires:
+            - migrate
