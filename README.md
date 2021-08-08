@@ -1,5 +1,5 @@
-# MyCoin
-A simple tutorial for Truffle and Solidity development.
+# Truffle Contract Demonstrations
+A set of demonstration contracts for Ethereum implemented using Solidity and Truffle.
 
 ## Development
 
@@ -12,13 +12,34 @@ A simple tutorial for Truffle and Solidity development.
 $ yarn run truffle develop --log
 ```
 
+### Linting the Source Code Files
+
+```bash
+$ yarn lint
+```
+
 ### Executing the Test Suites
 
 #### Initializing the Test Network
+
 ```bash
 $ yarn run ganache-cli
 ```
 
+#### Running the Test Suites
+
 ```bash
 $ yarn test
+```
+
+#### Running only the Truffle Test Suites for Solidity Contracts
+
+```bash
+$ yarn test:truffle
+```
+
+#### Running only the JavaScript Test Suites
+
+```bash
+$ yarn test:jest
 ```

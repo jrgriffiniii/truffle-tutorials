@@ -1,11 +1,41 @@
 {
   "dependencies": {
+    "@openzeppelin/contracts": "^4.2.0",
     "truffle": "^5.4.5"
   },
   "devDependencies": {
-    "ganache-cli": "^6.12.2"
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@codechecks/client": "^0.1.11",
+    "@openzeppelin/test-environment": "^0.1.9",
+    "@openzeppelin/test-helpers": "^0.5.12",
+    "babel-jest": "^27.0.6",
+    "eth-gas-reporter": "^0.2.22",
+    "ganache-cli": "^6.12.2",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "prettier-plugin-solidity": "^1.0.0-beta.17",
+    "solhint": "^3.3.6",
+    "solhint-plugin-prettier": "^0.0.5",
+    "solidity-coverage": "^0.7.16"
   },
   "scripts": {
-    "test": "truffle migrate --network test && truffle test --network test ./test/*.sol && truffle test --network test ./test/*.js"
+    "prettier:check": "prettier --check .",
+    "prettier:write": "prettier --write .",
+    "solhint": "solhint 'contracts/**/*.sol'",
+    "lint": "yarn prettier:check",
+    "migrate": "truffle migrate --network=test",
+    "test:truffle": "truffle test --network=test",
+    "test:coverage": "truffle run coverage",
+    "test:jest": "jest __tests__ --forceExit",
+    "test": "yarn migrate && yarn test:truffle && yarn test:jest"
+  },
+  "peerDependencies": {
+    "abort-controller": "*",
+    "abstract-leveldown": "*",
+    "google-protobuf": "^3.2.0",
+    "node-fetch": "*",
+    "subscriptions-transport-ws": "^0.9.0",
+    "typescript": ">=2.7"
   }
 }
