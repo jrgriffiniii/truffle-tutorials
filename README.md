@@ -1,5 +1,7 @@
-# Truffle Contract Demonstrations
-A set of demonstration contracts for Ethereum implemented using Solidity and Truffle.
+# Truffle Tutorials
+[![CircleCI](https://circleci.com/gh/jrgriffiniii/truffle-tutorials/tree/main.svg?style=svg)](https://circleci.com/gh/jrgriffiniii/truffle-tutorials/tree/main)
+
+A set of tutorials for implementing Ethereum smart contracts using Solidity and the Truffle Suite.
 
 ## Development
 
